@@ -1,0 +1,14 @@
+Am reprezentat hash-ul ca un vector dinamic de pointeri la liste simplu inlantuite.
+Am implementat cate o functie pentru fiecare comanda care poate fi data, si o functie "centrala" care decide ce comanda s-a dat.
+
+hash_init -> aloca un hash
+hash_destroy -> face free la un hash
+
+hash_add -> implementeaza comanda add
+hash_remove -> implementeaza comanda remove
+hash_find -> implementeaza comanda find
+hash_clear -> implementeaza comanda clear
+hash_print -> implementeaza comanda print
+hash_print_bucket -> implementeaza comanda print bucket
+
+process_command -> decide ce functie sa apeleze
