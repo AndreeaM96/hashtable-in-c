@@ -1,14 +1,48 @@
-Am reprezentat hash-ul ca un vector dinamic de pointeri la liste simplu inlantuite.
-Am implementat cate o functie pentru fiecare comanda care poate fi data, si o functie "centrala" care decide ce comanda s-a dat.
+HASHTABLE|
+=========+
 
-hash_init -> aloca un hash
-hash_destroy -> face free la un hash
 
-hash_add -> implementeaza comanda add
-hash_remove -> implementeaza comanda remove
-hash_find -> implementeaza comanda find
-hash_clear -> implementeaza comanda clear
-hash_print -> implementeaza comanda print
-hash_print_bucket -> implementeaza comanda print bucket
+====================+
+Rulare si parametrii|
+====================+
 
-process_command -> decide ce functie sa apeleze
+Pentru crearea executabilului se ruleaza comanda "make -f GNUmakefile".
+
+Inainte de a rula executabilul trebuie sa se dea comanda:
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.
+doar o data pentru fiecare instanta de terminal deschisa.
+
+Executabilul se va rula in felul urmator:
+./tema1 hash_size [input_file1] [input_file2] ...
+
+Parametrii in linia de comanda:
+Primul parametru care trebuie dat este marimea initiala a hashtable-ului.
+Urmatorii parametrii sunt optionali si constituie fisiere de intrare prin care se pot sa comenzi programului.
+Daca nu este dat nici un fisier ca argument, atunci programul va astepta comenzi de la tastatura.
+
+
+===================+
+Informatii generale|
+===================+
+
+Hashtable-ul va contine "hash_size" bucket-uri, care sunt liste simplu inlantuite ce contin cuvinte.
+Hashtable-ul in sine este un vector alocat dinamic ce are ca elemente bucket-uri.
+Se pot introduce doar cuvinte (respecta regex-ul [A-Za-z]+).
+Un bucket nu poate contine duplicate.
+Elementele sunt inserate la finalul bucket-ului.
+Functia de hash este definita in biblioteca dinamica "libhash.so".
+Daca dimensiunea hashtable-ului este impara (2k+1), dimensiunea dupa injumatatire va fi k.
+
+
+=======+
+Comenzi|
+=======+
+
+add <cuvant> -> adauga cuvantul in hashtable
+remove <cuvant> -> sterge cuvantul din hashtable
+find <cuvant> [<fisier_iesire>] -> cauta cuvantul in hashtable, scrie True sau False in fisierul de iesire sau la consola daca parametrul lipseste
+clear -> goleste hashtable-ul
+print_bucket <index_bucket> [<fisier_iesire>] -> scrie toate cuvintele din bucketul de la indexul dat in fisierul dat ca parametru sau la consola daca acesta lipseste. Sunt scrise toate pe aceasi linie, separate prin spatiu
+print [<fisier_iesire>] -> scrie toate bucketurile din hashtable in fisierul dat ca parametru sau la consola daca acesta lipseste. Fiecare bucket este printat pe propria linie
+resize double -> dubleaza dimensiunea hashtable-ului. Cel vechi este parcurs iar cuvintele sunt inserate intr-un hashtable nou de dimensiune dubla, iar cel vechi este dezalocat
+resize halve -> injumatateste dimensiunea hashtable-ului. Cel vechi este parcurs iar cuvintele sunt inserate intr-un hashtable nou de dimensiune mai mic, iar cel vechi este dezalocat

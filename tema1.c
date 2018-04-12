@@ -85,6 +85,7 @@ void hash_add(my_hash *ht, char word[])
 
 	if (strcmp(word, "") == 0) {
 		perror("Invalid argument!\n");
+		hash_destroy(ht);
 		exit(-1);
 	}
 
@@ -195,6 +196,7 @@ void hash_print_bucket(my_hash *ht, char buffer[])
 	for (i = 0 ; i < strlen(idx) ; i++) {
 		if (!isdigit(idx[i])) {
 			perror("Invalid argument!");
+			hash_destroy(ht);
 			exit(-1);
 		}
 
@@ -288,6 +290,7 @@ void hash_print(my_hash *ht, char buffer[])
 			fclose(f);
 		} else {
 			perror("Invalid file!");
+			hash_destroy(ht);
 			exit(-1);
 		}
 	}
@@ -378,8 +381,15 @@ my_hash *process_command(my_hash *ht, char buffer[])
 		} else if (strcmp(arg, "halve") == 0) {
 			return hash_halve(ht);
 		}
+	}
+	if (strcmp(command, "quit") == 0) {
+		printf("Bye!\n");
+		hash_destroy(ht);
+
+		exit(0);
 	} else {
 		perror("Wrong command!\n");
+		hash_destroy(ht);
 		exit(-1);
 	}
 }
