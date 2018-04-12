@@ -5,7 +5,8 @@
 
 #define BUFSIZE 20000
 
-typedef struct Elem {		//Un element dintr-un bucket
+//Un element dintr-un bucket
+typedef struct Elem {
 
 	int key;
 	char *val;
@@ -13,15 +14,16 @@ typedef struct Elem {		//Un element dintr-un bucket
 
 } elem;
 
-typedef struct Hash {		//Hash-ul propriu-zis
+//Hash-ul propriu-zis
+typedef struct Hash {
 
 	long hash_size;
 	elem **buckets;
 
 } my_hash;
 
-my_hash *hash_init(long hash_size)
-{		//Initialixarea hash-ului si alocarea memoriei
+//Initializarea unui hash de marime "hash_size" si alocarea memoriei pentru acesta
+my_hash *hash_init(long hash_size) {		
 	int i;
 	my_hash *ht = NULL;
 
@@ -40,8 +42,8 @@ my_hash *hash_init(long hash_size)
 	return ht;
 }
 
-void hash_destroy(my_hash *ht)
-{
+//Functia care dezloca hash-ul primit ca argument
+void hash_destroy(my_hash *ht) {
 	int i;
 
 	for (i = 0 ; i < ht->hash_size ; i++)
@@ -51,8 +53,9 @@ void hash_destroy(my_hash *ht)
 	free(ht);
 }
 
-int exists(elem *bucket, char word[])
-{
+//Functie care verifica daca un element se gaseste intr-un bucket primit ca argument
+//Parcurge bucket-ul primit ca argument si verifica daca exista elemntul in el
+int exists(elem *bucket, char word[]) {
 	elem *head = bucket;
 
 	while (head->next != NULL) {
@@ -64,8 +67,11 @@ int exists(elem *bucket, char word[])
 	return 0;
 }
 
-void hash_add(my_hash *ht, char word[])
-{
+//Functie care adauga un cuvant in hash-ul primit ca argument
+//Aloc memorie pentru un nou nod
+//Aplic functia de hash pe cuvant => aflu indexul bucket-ului in care trebuie sa adaug
+//Parcurg bucket-ul respectiv si adaug elementul alocat la finalul lui
+void hash_add(my_hash *ht, char word[]) {
 	int index, i;
 	elem *new;
 	elem *head = NULL;
@@ -102,8 +108,10 @@ void hash_add(my_hash *ht, char word[])
 	}
 }
 
-void hash_remove(my_hash *ht, char word[])
-{
+//Functie care sterge un element din hashtable
+//Aplic functia de hash pentru a afla indexul bucket-ului din care trebuie sa sterg
+//Parcurg bucket-ul pana cand gasesc elementul si in sterg
+void hash_remove(my_hash *ht, char word[]) {
 	int index;
 
 	elem *curr = NULL;
@@ -129,8 +137,10 @@ void hash_remove(my_hash *ht, char word[])
 	}
 }
 
-void hash_find(my_hash *ht, char buffer[])
-{
+//Functie care determina daca elementul dat ca argument exista in hashtable
+//Aplic functia hash pentru a afla indexul bucket-ului in care trebuie sa caut
+//Folosesc functia "exists" definita mai sus si in functie de rezultat returnez "True" sau "False"
+void hash_find(my_hash *ht, char buffer[]) {
 	int index, rez;
 	char *ch;
 	char *word;
@@ -160,8 +170,10 @@ void hash_find(my_hash *ht, char buffer[])
 	}
 }
 
-void hash_clear(my_hash *ht)
-{
+//Functie care goleste hashtable-ul
+//Parcurg fiecare bucket si dezaloc toate elementele inafara de capul listei,
+//iar next-ul fiecarui cap este setat la NULL
+void hash_clear(my_hash *ht) {
 	int i;
 	elem *curr;
 	elem *prev;
@@ -182,8 +194,11 @@ void hash_clear(my_hash *ht)
 	}
 }
 
-void hash_print_bucket(my_hash *ht, char buffer[])
-{
+//Functie care printeaza continutul bucket-ului de la indexul dat ca prim argument in buffer
+//Parsez buffer ca sa obtin indexul si ca sa aflu daca trebuie sa scriu si in fisier sau daca scriu la consola
+//Dupa ce am aflat indexul, parcurg bucket-ul de la indexul respectiv si printez elementele
+//la consola sau le scriu in fisier
+void hash_print_bucket(my_hash *ht, char buffer[]) {
 	int index, i;
 	char *ch;
 	char *idx;
@@ -241,8 +256,10 @@ void hash_print_bucket(my_hash *ht, char buffer[])
 	}
 }
 
-void hash_print(my_hash *ht, char buffer[])
-{
+//Functie care printeaza tot hashtable-ul
+//Pentru fiecare bucket: il parcurg si printez elementele
+//la consola sau le scriu in fisier, fiecare bucket pe cate o linie
+void hash_print(my_hash *ht, char buffer[]) {
 	int i;
 	elem *head;
 	char *ch;
@@ -296,8 +313,11 @@ void hash_print(my_hash *ht, char buffer[])
 	}
 }
 
-my_hash *hash_double(my_hash *ht)
-{
+//Functie care dubleaza hashtable-ul
+//Creez un nou hashtable care are marime dubla fata da cel vechi
+//Parcurg vechiul hashtable si adaug toate cuvintele in cel nou
+//Apoi dezaloc hashtable-ul vechi
+my_hash *hash_double(my_hash *ht) {
 	int i;
 	elem *head;
 
@@ -320,8 +340,11 @@ my_hash *hash_double(my_hash *ht)
 	return ht2;
 }
 
-my_hash *hash_halve(my_hash *ht)
-{
+//Functie care injumatateste hashtable-ul
+//Creez un nou hashtable care are marime injumatatita fata da cel vechi
+//Parcurg vechiul hashtable si adaug toate cuvintele in cel nou
+//Apoi dezaloc hashtable-ul vechi
+my_hash *hash_halve(my_hash *ht) {
 	int i;
 	elem *head;
 
@@ -344,8 +367,9 @@ my_hash *hash_halve(my_hash *ht)
 	return ht2;
 }
 
-my_hash *process_command(my_hash *ht, char buffer[])
-{
+//Functie care parseaza comanda primita si
+//determina ce functie trebuie apelata
+my_hash *process_command(my_hash *ht, char buffer[]) {
 	char command[10];
 	char arg[BUFSIZE];
 
@@ -394,8 +418,7 @@ my_hash *process_command(my_hash *ht, char buffer[])
 	}
 }
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
 	int i;
 	long hash_size = 0;
 	char buffer[BUFSIZE];
